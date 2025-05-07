@@ -1,25 +1,26 @@
-import {
-  ViroARScene,
-  ViroTrackingReason,
-  ViroTrackingStateConstants,
-} from "@reactvision/react-viro";
 import React, { useState } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { ViroARScene, ViroText, ViroTrackingStateConstants } from "@reactvision/react-viro";
 
-// AR scene component
-const HelloWorldSceneAR = () => {
-  const [text, setText] = useState("Initializing AR...");
+const HelloWorldSceneAR = (props) => {
+  const [sceneText, setSceneText] = useState("Initializing AR...");
 
-  // Update tracking state
-  function onInitialized(state: any, reason: ViroTrackingReason) {
-    if (state === ViroTrackingStateConstants.TRACKING_NORMAL) {
-      setText("AR Ready 🎯");
+  const arText = props.arText;
+
+  function onInitialized(state, reason) {
+    if (state === ViroTrackingStateConstants.TRACKING_NORMAL && !arText) {
+      setSceneText("AR Ready 🎯");
     }
   }
 
   return (
     <ViroARScene onTrackingUpdated={onInitialized}>
-      {/* Here you can add your AR content */}
+      {(arText || sceneText) && (
+        <ViroText
+          text={arText || sceneText}
+          position={[0, 0, -1]}
+          style={{ fontSize: 30, color: "#ff0000" }}
+        />
+      )}
     </ViroARScene>
   );
 };
